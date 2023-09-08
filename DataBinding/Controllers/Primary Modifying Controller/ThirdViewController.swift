@@ -27,63 +27,55 @@ class ThirdViewController: UIViewController {
     private var textFields = [UITextField]()
     private var allFieldsObserver: Observer<[UITextField]>?
     
-//    private var fieldsFilledRelay = BehaviorRelay(value: false)
+    private var fieldsFilledRelay = BehaviorRelay(value: false)
     private let disposeBag = DisposeBag()
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        loginButton.isEnabled = false
         // MARK: -方法零
-//        fieldsFilledRelay.bind(to: loginButton.rx.isEnabled)
+        // rx bind
+//        fieldsFilledRelay
+//            .distinctUntilChanged()     // 確保值改變時才發出事件
+//            .bind(to: loginButton.rx.isEnabled)
 //            .disposed(by: disposeBag)
         
-//        let combinedTexts = Observable.combineLatest(inputTextFields.map { $0.rx.text.orEmpty })
-//        combinedTexts.map { textFields in
-//            textFields.allSatisfy { !$0.isEmpty }
-//        }
-//        .distinctUntilChanged() // 這將確保只有當值真的發生變化時才發出事件
-//        .bind(to: loginButton.rx.isEnabled)
-//        .disposed(by: disposeBag)
         
+        // rx bind
+//        let combinedTexts: Observable<[String]> = Observable.combineLatest(inputTextFields.map { $0.rx.text.orEmpty })
+//        let textsAllNotEmpty = combinedTexts.map { textArray in
+//            textArray.allSatisfy { !$0.isEmpty }
+//        }
+//
+//        textsAllNotEmpty
+//            .distinctUntilChanged()
+//            .bind(to: loginButton.rx.isEnabled)
+//            .disposed(by: disposeBag)
+        
+        
+        // rx subscribe
+        // 將每一個 textField 的 text 轉為 Observable 並合併它們
+//        let textChanges = Observable.merge(inputTextFields.map { $0.rx.text.orEmpty.asObservable() })
+//
+//        // 當任何 textField 的內容變更時，更新按鈕的狀態
+//        textChanges.subscribe(onNext: { [weak self] _ in
+//            let areAllFieldsFilled = self?.inputTextFields.allSatisfy { !$0.text!.isEmpty }
+//            self?.loginButton.isEnabled = areAllFieldsFilled ?? false
+//        }).disposed(by: disposeBag)
+        
+        
+        // rx drive
 //        let fieldsFilledDriver = Driver.combineLatest(inputTextFields.map { $0.rx.text.orEmpty.asDriver() })
+//
 //        fieldsFilledDriver.drive(onNext: { [weak self] texts in
 //            let areAllFieldsFilled = texts.allSatisfy { !$0.isEmpty }
 //            self?.loginButton.isEnabled = areAllFieldsFilled
-////            self?.updateLoginButtonState()
 //        }).disposed(by: disposeBag)
-        
-        // 將每一個 textField 的 text 屬性轉為 observable 並且合併它們
-        let textChanges = Observable.merge(inputTextFields.map { $0.rx.text.orEmpty.asObservable() })
-
-        // 當任何 textField 的內容變更時，更新按鈕的狀態
-        textChanges.subscribe(onNext: { [weak self] _ in
-            let areAllFieldsFilled = self?.inputTextFields.allSatisfy { !$0.text!.isEmpty }
-            self?.loginButton.isEnabled = areAllFieldsFilled ?? false
-//            self?.updateLoginButtonState()
-        })
-        .disposed(by: disposeBag)
 
         
         // MARK: -方法一
 //        loginButton.isEnabled = false
-        
-//        let name = Observer(String())
-//        name.value = "Tom"
-//        name.value = "Kim"
-        
-//        let name = Observer("Tom")
-//        name.value = "Kim"
-//
-//        name.bind { value in
-//            print(name.value ?? "")
-//        }
-//
-//        name.value = "Kim"
-        
-//        name.bind { value in
-//            print("YO \(name.value ?? "")")
-//        }
-//        name.value = "Tom"
         
         // MARK: -方法二
 //        buttonStateObserver = Observer(false)
@@ -107,6 +99,8 @@ class ThirdViewController: UIViewController {
 //        fieldsFilledRelay.accept(areFieldsFilled)
         
         // MARK: -方法一
+        updateLoginButtonState()
+        
 //        if firstTextField.text != "" && secondTextField.text != "" && thirdTextField.text != "" {
 //            loginButton.isEnabled = true
 //        } else {
@@ -116,47 +110,20 @@ class ThirdViewController: UIViewController {
         // MARK: -方法二
 //        buttonStateObserver?.value = areFieldsFilled
         
-        // Spaghetti Code
-//        let areFieldsFilled = Observer(firstTextField.text != "" && secondTextField.text != "" && thirdTextField.text != "")
-//        areFieldsFilled.bind { [weak self] isFilled in
-//              self?.loginButton.isEnabled = isFilled ?? false
-//        }
-        
-        
         // MARK: -方法三
 //        allFieldsObserver?.value = [firstTextField, secondTextField, thirdTextField]
 
-//        var textFields = [UITextField]()
-//        textFields.append(contentsOf: [firstTextField, secondTextField, thirdTextField])
-//
-//        let allFields = Observer(textFields)
-//        allFields.bind { textFields in
-//            let fieldArray = textFields?.filter { $0.text != "" }
-//            self.loginButton.isEnabled = (fieldArray?.count == 3)
-//        }
         
-        
-        // 這個判斷方式不對，如果第一個欄位字元數大於 3 就會開放點選
-//        let text = Observer(firstTextField.text! + secondTextField.text! + thirdTextField.text!)
-//        text.bind { value in
-//            if let value = value {
-//                if value.count >= 3 {
-//                    self.loginButton.isEnabled = true
-//                } else {
-//                    self.loginButton.isEnabled = false
-//                }
-//            }
-//        }
     }
     
     private func updateLoginButtonState() {
-        let areAllFieldsFilled = inputTextFields.allSatisfy { !$0.text!.isEmpty }
-        loginButton.isEnabled = areAllFieldsFilled
+        loginButton.isEnabled = inputTextFields.allSatisfy { !$0.text!.isEmpty }
+//        loginButton.isEnabled = areFieldsFilled
     }
 
 }
 
-// 另外寫的重複的 Observer Pattern 的 Class
+// MARK: - Boxing
 class Observer<T> {
     typealias listener = (T?) -> Void
     
