@@ -94,8 +94,8 @@
 		9166C28B276057A6001F9BE7 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				9166C28C276057C8001F9BE7 /* FirstViewController.swift */,
 				9166C276275F5953001F9BE7 /* ViewController.swift */,
+				9166C28C276057C8001F9BE7 /* FirstViewController.swift */,
 				9166C286275F6E4E001F9BE7 /* SecondViewController.swift */,
 				9166C2902760B463001F9BE7 /* Primary Modifying Controller */,
 			);
@@ -116,7 +116,6 @@
 				7B08EAF9359AAEB47FAA9DCB /* Pods-DataBinding.debug.xcconfig */,
 				28CE280703156EED14EFD143 /* Pods-DataBinding.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
