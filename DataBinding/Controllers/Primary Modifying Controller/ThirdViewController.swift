@@ -33,13 +33,13 @@ class ThirdViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loginButton.isEnabled = false
+//        loginButton.isEnabled = false
         // MARK: -方法零
         // rx bind
-//        fieldsFilledRelay
-//            .distinctUntilChanged()     // 確保值改變時才發出事件
-//            .bind(to: loginButton.rx.isEnabled)
-//            .disposed(by: disposeBag)
+        fieldsFilledRelay
+            .distinctUntilChanged()     // 確保值改變時才發出事件
+            .bind(to: loginButton.rx.isEnabled)
+            .disposed(by: disposeBag)
         
         
         // rx bind
@@ -97,9 +97,11 @@ class ThirdViewController: UIViewController {
     @IBAction func judgeBtnState() {
         // MARK: -方法零
 //        fieldsFilledRelay.accept(areFieldsFilled)
-        
+        fieldsFilledRelay.accept(inputTextFields.allSatisfy { !$0.text!.isEmpty })
+
+    
         // MARK: -方法一
-        updateLoginButtonState()
+//        updateLoginButtonState()
         
 //        if firstTextField.text != "" && secondTextField.text != "" && thirdTextField.text != "" {
 //            loginButton.isEnabled = true
